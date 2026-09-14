@@ -59,7 +59,7 @@ A lexradar quer melhorar a consulta e acompanhamento de processos judiciais. O u
 > * Garantir acessibilidade básica e responsividade.
 > * Criar testes para os principais fluxos.
 >
-> ### Antes de implementar
+> ### Antes de implementar 12
 >
 > Primeiro analise o problema e proponha:
 >
