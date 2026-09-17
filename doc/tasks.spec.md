@@ -65,7 +65,10 @@ Definir modelos de dados e mockar os processos para alimentar a busca e os detal
 
 - criar tipos para processo, partes, movimentações e status;
 - montar dataset local com 5 a 10 processos;
-- incluir campos: número, partes, tribunal, data, status, resumo e movimentações;
+- incluir campos: número, tipo, partes com papel, tribunal, vara, data, status, resumo e movimentações;
+- cobrir pelo menos os status Em andamento, Concluído, Suspenso e Arquivado;
+- incluir processos encontráveis por número, parte e palavra-chave;
+- usar exclusivamente nomes e identificadores fictícios;
 - criar utilitários de busca por texto.
 
 **Critérios de aceite**
@@ -73,6 +76,12 @@ Definir modelos de dados e mockar os processos para alimentar a busca e os detal
 - dados mockados carregam localmente;
 - existe função de busca por texto livre;
 - estrutura de dados atende as telas de listagem e detalhe.
+- dataset contém casos suficientes para validar resultados, vazio e todos os estados de status;
+- busca consulta número, partes, resumo, título e descrição das movimentações;
+- movimentações são exibidas da mais recente para a mais antiga;
+- busca parcial normalizada usa lógica OR entre os campos;
+- ordenação prioriza relevância e usa a última movimentação como desempate;
+- termo `__error__` simula falha de busca somente nos testes.
 
 **Saída esperada**
 
@@ -97,8 +106,10 @@ Implementar a página principal de busca e listagem de resultados.
 - renderizar lista de resultados;
 - exibir estados: inicial, carregando, sucesso e vazio;
 - controlar a busca por texto;
-- adicionar botão para limpar a busca;
+- adicionar botão para limpar busca;
 - preparar navegação para detalhes.
+- documentar e implementar a direção visual da busca, dos cards de resultado e dos estados;
+- garantir foco visível, label do campo e envio por `Enter`.
 
 **Critérios de aceite**
 
@@ -106,6 +117,9 @@ Implementar a página principal de busca e listagem de resultados.
 - resultados aparecem corretamente;
 - quando não houver resultados, exibe mensagem apropriada;
 - layout responsivo para mobile e desktop.
+- tela inicial, resultados e estado vazio seguem os requisitos visuais documentados;
+- resultado não cria rolagem horizontal em mobile;
+- loading não permite ações duplicadas.
 
 **Saída esperada**
 
@@ -130,13 +144,17 @@ Criar a visualização detalhada de cada processo e suas movimentações.
 - renderizar informações do processo;
 - listar movimentações com data, título e descrição;
 - navegação de retorno para pesquisa;
+- preservar o termo e os resultados ao retornar para a pesquisa durante a navegação;
 - tratar estado de erro ao tentar carregar um processo inexistente.
+- diferenciar processo inexistente de falha simulada do serviço.
 
 **Critérios de aceite**
 
 - o usuário consegue abrir um processo a partir do resultado;
 - detalhes aparecem com as informações obrigatórias;
 - estado de erro é exibido para caso inexistente ou falha simulada.
+- detalhes apresentam resumo, metadados e timeline conforme a especificação de UI;
+- timeline começa pela movimentação mais recente.
 
 **Saída esperada**
 
@@ -161,6 +179,10 @@ Cobrir os principais fluxos com testes e validar a qualidade do protótipo.
 - testar estado vazio;
 - testar erro de busca e erro de detalhes;
 - testar navegação para detalhes;
+- testar retorno aos resultados preservando contexto;
+- testar envio da busca por `Enter` e foco nos controles principais;
+- validar visualmente nos breakpoints de 375px, 768px e 1440px, nos estados inicial, resultados, vazio, loading e erro;
+- verificar contraste WCAG AA e mínimo de 4.5:1 para texto normal;
 - rodar suite de testes.
 
 **Critérios de aceite**
@@ -168,6 +190,7 @@ Cobrir os principais fluxos com testes e validar a qualidade do protótipo.
 - testes passando para os fluxos principais;
 - cobertura do caminho crítico de uso;
 - documentação dos comportamentos em testes.
+- critérios básicos de UI e acessibilidade verificados.
 
 **Saída esperada**
 
@@ -190,6 +213,7 @@ Finalizar o protótipo com refinamento visual e validação final.
 
 - ajustar responsividade e acessibilidade básica;
 - revisar consistência visual;
+- conferir hierarquia de informação, badges de status, timeline e estados de interface;
 - limpar código e nomes de componentes;
 - rodar build final;
 - verificar backlog de issues manuais.
@@ -230,7 +254,7 @@ feature/final-polish
 
 ## Critérios globais de entrega
 
-- cada task deve ser concluída em branch separada;
+- cada task pode ser concluída em branch separada, conforme a necessidade do fluxo de trabalho;
 - uma task só deve avançar quando a anterior estiver validada;
 - todo commit deve refletir o objetivo da branch;
 - qualquer atraso ou risco deve ser registrado antes de seguir para a próxima etapa.
@@ -245,4 +269,4 @@ Se o objetivo for cumprir em 60 minutos, usar a seguinte linha de priorização:
 
 ## Observação final
 
-A estratégia de task por branch reduz risco de conflitar código e mantém o progresso rastreável. Para o desafio técnico, esse modelo é suficiente para acelerar a entrega sem perder controle do escopo.
+A estratégia de task por branch pode reduzir risco de conflitar código e manter o progresso rastreável. Para o desafio técnico, ela é recomendada, mas não constitui critério funcional do MVP.

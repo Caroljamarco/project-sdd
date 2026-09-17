@@ -14,6 +14,8 @@ Criar uma interface de consulta em aproximadamente 60 minutos, com foco em:
 - suporte a desktop e mobile;
 - uso de dados simulados sem backend real.
 
+As referencias de produto consultadas incluem o [Jusbrasil](https://www.jusbrasil.com.br/consulta-processual), pela busca por nome, numero ou identificador, e portais oficiais como o [TJSP](https://www.tjsp.jus.br/Processos), pela organizacao das informacoes institucionais. Essas referencias orientam os campos e o fluxo, mas a interface da LexRadar deve ter identidade propria e usar somente dados ficticios.
+
 ## Usuário alvo
 
 Usuário profissional que precisa verificar rapidamente o estado de um processo, sem navegar em sistemas complexos. O principal valor é velocidade, clareza e redução de atrito na consulta.
@@ -30,11 +32,50 @@ Usuário profissional que precisa verificar rapidamente o estado de um processo,
 
 3. Detalhes do processo
    - Ambiguidade: exibir todas as movimentações ou apenas as recentes.
-   - Decisão: exibir a lista completa em ordem cronológica, priorizando legibilidade e relevância.
+   - Decisão: exibir a lista completa da movimentação mais recente para a mais antiga, priorizando legibilidade e relevância.
 
 4. Dados mockados
    - Ambiguidade: os campos e status devem seguir algum conjunto específico.
-   - Decisão: assumir um schema funcional simples e coerente, com dados reais em espírito, mas sem dependência de backend.
+   - Decisão: usar um schema funcional simples e coerente, com pelo menos cinco processos fictícios, cobrindo diferentes status, tribunais, partes e tipos de movimentação, sem copiar dados reais.
+
+5. Ordem das movimentações
+   - Decisão: exibir a movimentação mais recente primeiro, pois o principal objetivo é identificar novidades rapidamente.
+
+6. Regra de busca
+   - Decisão: normalizar caixa e acentos, usar correspondência parcial e combinar os campos com lógica OR.
+   - Decisão: ordenar por relevância, priorizando número exato, número parcial, parte e palavra-chave; usar a data da última movimentação como desempate.
+
+7. Erros simulados
+   - Decisão: o serviço local aceita o termo reservado `__error__` para simular erro de busca somente nos testes.
+   - Decisão: uma rota com ID desconhecido representa processo inexistente; falha de serviço de detalhes é coberta por cenário simulado separado.
+
+8. Retorno dos detalhes
+   - Decisão: o botão de voltar e o botão voltar do navegador preservam termo e resultados durante a navegação.
+   - Decisão: não preservar o estado após refresh, pois cache persistente está fora do MVP.
+
+9. Validação responsiva e acessível
+   - Decisão: validar a UI em 375px, 768px e 1440px.
+   - Decisão: usar WCAG AA como referência, incluindo contraste mínimo de 4.5:1 para texto normal.
+
+## Diretrizes de UI
+
+### Direção visual
+
+- Produto profissional, claro e orientado a consulta rápida, sem aparência de portal institucional pesado.
+- Hierarquia tipográfica evidente, com o número do processo e o status como elementos de maior destaque nos resultados.
+- Cores de status sem depender somente de cor: cada badge deve conter texto legível.
+- Cards ou linhas de resultado compactos, com área de clique ampla e separação visual suficiente.
+- Timeline vertical para movimentações, com a atualização mais recente visualmente destacada.
+- Interface responsiva: em mobile, informações secundárias devem quebrar em blocos verticais sem exigir rolagem horizontal.
+
+### Telas esperadas
+
+1. Busca inicial: campo principal, ação de buscar, texto de orientação e exemplos de consulta.
+2. Resultados: termo consultado, quantidade de resultados, lista de processos e ação de limpar.
+3. Estado vazio: mensagem útil, sugestão de nova consulta e ação para limpar o termo.
+4. Detalhes: retorno para resultados, resumo do processo, status, partes e timeline.
+5. Carregamento: skeleton ou indicador associado ao conteúdo que será carregado.
+6. Erros: mensagem clara, preservação do contexto e ações de tentar novamente ou voltar.
 
 ## MVP proposto
 
