@@ -22,11 +22,10 @@ function SearchPage() {
   const [error, setError] = useState('')
   const navigate = useNavigate()
 
-  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
-    event.preventDefault()
-    const nextQuery = query.trim()
+  const performSearch = (nextQuery: string) => {
+    const trimmedQuery = nextQuery.trim()
 
-    if (!nextQuery) {
+    if (!trimmedQuery) {
       setResults([])
       setError('')
       return
@@ -37,7 +36,7 @@ function SearchPage() {
 
     window.setTimeout(() => {
       try {
-        setResults(findProcesses(nextQuery))
+        setResults(findProcesses(trimmedQuery))
       } catch {
         setError('Não foi possível realizar a busca neste momento.')
         setResults([])
@@ -46,6 +45,20 @@ function SearchPage() {
       }
     }, 150)
   }
+
+  const handleSearch = (event: React.FormEvent<HTMLFormElement>) => {
+    event.preventDefault()
+    performSearch(query)
+  }
+
+  const handleClear = () => {
+    setQuery('')
+    setResults([])
+    setError('')
+    setLoading(false)
+  }
+
+  const suggestions = ['0001234', 'TechNova', 'sentença']
 
   return (
     <main className="page-shell">
@@ -71,11 +84,32 @@ function SearchPage() {
           {loading ? 'Buscando...' : 'Buscar'}
         </button>
         {query && (
-          <button type="button" className="secondary" onClick={() => setQuery('')}>
+          <button type="button" className="secondary" onClick={handleClear} aria-label="Limpar busca">
             Limpar
           </button>
         )}
       </form>
+
+      {!query && !error && (
+        <div className="suggestions-box" aria-label="Sugestões de busca">
+          <p>Exemplos de busca:</p>
+          <div className="suggestions">
+            {suggestions.map((suggestion) => (
+              <button
+                key={suggestion}
+                type="button"
+                className="suggestion-btn"
+                onClick={() => {
+                  setQuery(suggestion)
+                  performSearch(suggestion)
+                }}
+              >
+                {suggestion}
+              </button>
+            ))}
+          </div>
+        </div>
+      )}
 
       {error && <div className="state-box error">{error}</div>}
 
@@ -88,7 +122,7 @@ function SearchPage() {
       {!loading && query && results.length === 0 && !error && (
         <div className="state-box empty">
           Nenhum processo encontrado para a busca atual.
-          <button type="button" className="secondary inline" onClick={() => setQuery('')}>
+          <button type="button" className="secondary inline" onClick={handleClear}>
             Limpar busca
           </button>
         </div>
@@ -96,6 +130,9 @@ function SearchPage() {
 
       {!loading && results.length > 0 && (
         <section className="results" aria-live="polite">
+          <div className="results-header">
+            <span>{results.length} resultado(s)</span>
+          </div>
           {results.map((process) => (
             <article
               key={process.id}
@@ -103,6 +140,7 @@ function SearchPage() {
               onClick={() => navigate(`/processos/${process.id}`)}
               role="button"
               tabIndex={0}
+              aria-label={`Abrir processo ${process.number}`}
               onKeyDown={(event) => {
                 if (event.key === 'Enter' || event.key === ' ') {
                   event.preventDefault()
@@ -112,7 +150,9 @@ function SearchPage() {
             >
               <div className="process-card-header">
                 <strong>{process.number}</strong>
-                <span className="status">{process.status}</span>
+                <span className={`status status-${process.status.toLowerCase().replace(/\s+/g, '-')}`}>
+                  {process.status}
+                </span>
               </div>
               <p className="parties">Partes: {process.parties.join(', ')}</p>
               <div className="meta-grid">
