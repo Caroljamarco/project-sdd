@@ -1,0 +1,67 @@
+.app-shell {
+  min-height: 100svh;
+  background: #f7f7f2;
+}
+
+.app-header {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+  max-width: 1120px;
+  margin: 0 auto;
+  padding: 1.5rem 2rem;
+  color: #1e2924;
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.brand-mark {
+  display: grid;
+  width: 2rem;
+  height: 2rem;
+  place-items: center;
+  border-radius: 50%;
+  color: #f7f7f2;
+  background: #1f5a4a;
+}
+
+.app-placeholder {
+  max-width: 720px;
+  margin: 0 auto;
+  padding: 12rem 2rem;
+}
+
+.eyebrow {
+  margin-bottom: 0.75rem;
+  color: #b4532a;
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.app-placeholder h1 {
+  max-width: 12ch;
+  margin: 0;
+  color: #1e2924;
+  font-family: Georgia, 'Times New Roman', serif;
+  font-size: clamp(3rem, 8vw, 5.5rem);
+  line-height: 0.98;
+}
+
+.app-placeholder p:last-child {
+  max-width: 34rem;
+  margin-top: 1.5rem;
+  color: #53615a;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .app-header {
+    padding: 1.25rem;
+  }
+
+  .app-placeholder {
+    padding: 8rem 1.25rem;
+  }
+}
